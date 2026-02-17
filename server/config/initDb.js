@@ -1,43 +1,39 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
-const { pool } = require('./db');
+const { db } = require('./db');
 
 const initSQL = `
   CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
     credit_balance INTEGER DEFAULT 10,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS proposals (
-    id SERIAL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    client_name VARCHAR(255) NOT NULL,
-    project_title VARCHAR(255) NOT NULL,
-    status VARCHAR(50) DEFAULT 'draft',
-    brief_data JSONB,
-    proposal_data JSONB,
-    pricing_data JSONB,
-    timeline_data JSONB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    client_name TEXT NOT NULL,
+    project_title TEXT NOT NULL,
+    status TEXT DEFAULT 'draft',
+    brief_data TEXT,
+    proposal_data TEXT,
+    pricing_data TEXT,
+    timeline_data TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE INDEX IF NOT EXISTS idx_proposals_user_id ON proposals(user_id);
 `;
 
-async function init() {
-  try {
-    await pool.query(initSQL);
-    console.log('Database tables created successfully');
-    process.exit(0);
-  } catch (err) {
-    console.error('Database initialization failed:', err);
-    process.exit(1);
-  }
+try {
+  db.exec(initSQL);
+  console.log('Database tables created successfully');
+  process.exit(0);
+} catch (err) {
+  console.error('Database initialization failed:', err);
+  process.exit(1);
 }
-
-init();

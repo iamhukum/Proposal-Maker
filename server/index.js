@@ -20,14 +20,13 @@ app.use('/api/proposals', proposalRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/export', exportRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
-  });
-}
-
 app.use(errorHandler);
+
+// Serve React frontend
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`ProposalAI server running on port ${PORT}`);

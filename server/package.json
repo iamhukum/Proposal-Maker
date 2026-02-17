@@ -16,7 +16,7 @@
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.20.0",
     "pg": "^8.11.3",
-    "puppeteer": "^21.6.0",
+    "puppeteer-core": "^21.6.0",
     "express-rate-limit": "^7.1.4"
   },
   "devDependencies": {

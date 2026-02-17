@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 function buildProposalHTML(proposal) {
   const { client_name, project_title, proposal_data, pricing_data, timeline_data } = proposal;
@@ -395,7 +395,8 @@ async function generatePDF(proposal) {
 
   const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: process.env.CHROME_PATH || '/root/.cache/ms-playwright/chromium-1194/chrome-linux/chrome',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
   });
 
   try {
